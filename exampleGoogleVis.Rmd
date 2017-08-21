@@ -1,0 +1,63 @@
+---
+title: "googleVis 테스트"
+author: "eunkwang"
+date: "2017년 8월 21일"
+output: html_document
+---
+
+## 라이브러리 로드
+
+```{r libraryload, message=FALSE, echo=FALSE}
+library(googleVis)
+library(dplyr)
+
+op <- options(gvis.plot.tag='chart')
+
+```
+
+## 데이터로드
+
+```{r dataload}
+
+df <- read.csv("raw.csv", header = TRUE, encoding = 'UTF-8', stringsAsFactors = FALSE)
+
+head(df)
+
+```
+
+## 데이터 처리
+
+```{r manipulation}
+df$weekStartDate <- as.Date(df$weekStartDate)
+
+```
+
+
+
+## 그래프 생성
+
+```{r appannie, echo=FALSE, results='asis'}
+myStateSettings <- '
+{"colorOption":"_UNIQUE_COLOR","sizeOption":"_UNISIZE"}
+'
+
+M <- gvisMotionChart(df,
+                     idvar="newName", 
+                     timevar="weekStartDate",
+                     xvar="value1", 
+                     yvar="value2",
+                     sizevar = "value2PerValue1",
+                     options=list(width=1000, height=800, state=myStateSettings)
+                     )
+
+plot(M)
+```
+
+
+
+
+# 그래프 확인
+
+```{r resetOptions, message=FALSE, echo=FALSE}
+options(op)
+```
