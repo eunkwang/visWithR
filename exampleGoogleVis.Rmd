@@ -11,11 +11,21 @@ output: html_document
 library(googleVis)
 library(dplyr)
 
+# 차트 생성을 위한 옵션 처리
 op <- options(gvis.plot.tag='chart')
 
 ```
 
 ## 데이터로드
+
+샘플 데이터는 다음과 같은 구조를 가짐   
+
+1. newName : 그룹 정보, name1과 name10 이 존재
+2. weekStartDate : 집계 주간의 월요일 날짜
+3. period : 집계 주간
+4. value1 : 집계 지표 1
+5. value2 : 집계 지표 2
+6. value2PerValue1 : 집계 지표 1 당 평균 집계 지표 2
 
 ```{r dataload}
 
@@ -27,6 +37,8 @@ head(df)
 
 ## 데이터 처리
 
+날짜 데이터는 데이터 타입이 Date 여야 함
+
 ```{r manipulation}
 df$weekStartDate <- as.Date(df$weekStartDate)
 
@@ -35,6 +47,14 @@ df$weekStartDate <- as.Date(df$weekStartDate)
 
 
 ## 그래프 생성
+
+그래프는 다음과 같이 지정하여 생성해야 함
+
+1. idvar = 그룹 컬럼
+2. timevar = 기간 컬럼, 해당 컬럼은 date 타입이어야 함
+3. xvar = x축 값, 해당 컬럼은 numeric 타입이어야 함
+4. yvar = y축 값, 해당 컬럼은 numeric 타입이어야 함
+5. sizevar = 버블크기, 해당 컬럼은 numeric 타입이어야 함
 
 ```{r appannie, echo=FALSE, results='asis'}
 myStateSettings <- '
@@ -50,14 +70,9 @@ M <- gvisMotionChart(df,
                      options=list(width=1000, height=800, state=myStateSettings)
                      )
 
-plot(M)
+plot(M) # 생성된 그래프 객체를 html 로 변환하여 표기
 ```
 
-
-
-
-# 그래프 확인
-
 ```{r resetOptions, message=FALSE, echo=FALSE}
-options(op)
+options(op)  # 초기에 저장한 옵션으로 복귀
 ```
